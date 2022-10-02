@@ -1,6 +1,47 @@
-import { renderBlock } from './lib'
+import { renderBlock } from './lib';
 
-export function renderSearchFormBlock () {
+import date from "date-and-time";
+
+const currentDate: Date | string = new Date()
+
+let dateFrom: Date | string = new Date();
+dateFrom = date.format(dateFrom, "YYYY-MM-DD");
+console.log("dateFrom =", dateFrom);
+
+let dateMin: Date | string = new Date();
+dateMin = date.format(date.addDays(dateMin, 1), "YYYY-MM-DD");
+console.log("dateMin =", dateMin);
+
+let dateMax: Date | string = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0)
+dateMax = date.format(dateMax, "YYYY-MM-DD");
+console.log("dateMax =", dateMax);
+
+if (+dateFrom < +dateMin) {
+  dateFrom = dateMin;
+} else if (+dateFrom > +dateMax) {
+  dateFrom = dateMax;
+} else {
+  dateFrom
+}
+
+let dateTo: Date | string = new Date();
+dateTo = date.format(date.addDays(dateTo, 2), "YYYY-MM-DD")
+console.log("dateTo =", dateTo);
+
+if (+dateTo < +dateFrom) {
+  alert('Введите корректную дату')
+} else if (+dateTo > +dateMax) {
+  dateTo = dateMax;
+} else {
+  dateTo
+}
+
+export function renderSearchFormBlock(
+  dateFrom: Date | string,
+  dateMin: Date | string,
+  dateMax: Date | string,
+  dateTo: Date | string,
+) {
   renderBlock(
     'search-form-block',
     `
@@ -19,12 +60,12 @@ export function renderSearchFormBlock () {
         </div>
         <div class="row">
           <div>
-            <label for="check-in-date">Дата заезда</label>
-            <input id="check-in-date" type="date" value="2021-05-11" min="2021-05-11" max="2021-06-30" name="checkin" />
+            <label for="check-in-date">${dateFrom}</label>
+            <input id="check-in-date" type="date" value="${dateFrom}" min="${dateMin}" max="${dateMax}" name="checkin" />
           </div>
           <div>
-            <label for="check-out-date">Дата выезда</label>
-            <input id="check-out-date" type="date" value="2021-05-13" min="2021-05-11" max="2021-06-30" name="checkout" />
+            <label for="check-out-date">${dateTo}</label>
+            <input id="check-out-date" type="date" value="${dateTo}" min="${dateMin}" max="${dateMax}" name="checkout" />
           </div>
           <div>
             <label for="max-price">Макс. цена суток</label>
@@ -37,5 +78,5 @@ export function renderSearchFormBlock () {
       </fieldset>
     </form>
     `
-  )
+  );
 }
